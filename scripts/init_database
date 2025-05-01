@@ -1,37 +1,32 @@
-/*
-=============================================================
-Create Database and Schemas
-=============================================================
-Script Purpose:
-    This script creates a new database named 'DataWarehouse' after checking if it already exists. 
-    If the database exists, it is dropped and recreated. Additionally, the script sets up three schemas 
-    within the database: 'bronze', 'silver', and 'gold'.
-    
-WARNING:
-    Running this script will drop the entire 'DataWarehouse' database if it exists. 
-    All data in the database will be permanently deleted. Proceed with caution 
-    and ensure you have proper backups before running this script.
-*/
+-- WARNING: This script will drop and recreate the 'DataWarehouse' database.
+-- Ensure backups are taken before executing!
 
--- Connect to the default database (postgres) to manage other databases
-\c postgres;
+-- Drop the database if it exists
+DROP DATABASE IF EXISTS DataWarehouse;
 
--- Drop the 'DataWarehouse' database if it exists
-DO $$ 
-BEGIN
-    IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'DataWarehouse') THEN
-        PERFORM pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'DataWarehouse';
-        EXECUTE 'DROP DATABASE IF EXISTS "DataWarehouse"';
-    END IF;
-END $$;
+-- Create the database
+CREATE DATABASE DataWarehouse;
 
--- Create the 'DataWarehouse' database
-CREATE DATABASE "DataWarehouse";
+-- Switch to the new database
+USE DataWarehouse;
 
--- Connect to the newly created database
-\c "DataWarehouse";
+-- Create schemas (simulated using prefixes in MySQL, since MySQL does not support schemas like MSSQL)
+-- In MySQL, the typical approach is to create separate databases or use table name prefixes instead.
+-- But starting MySQL 5.7+, you can mimic schemas using database-like structures.
 
--- Create Schemas
-CREATE SCHEMA bronze;
-CREATE SCHEMA silver;
-CREATE SCHEMA gold;
+-- For educational or organizational purposes, we can simulate schemas like:
+CREATE TABLE bronze_example (
+    id INT PRIMARY KEY,
+    data VARCHAR(100)
+);
+
+CREATE TABLE silver_example (
+    id INT PRIMARY KEY,
+    data VARCHAR(100)
+);
+
+CREATE TABLE gold_example (
+    id INT PRIMARY KEY,
+    data VARCHAR(100)
+);
+
