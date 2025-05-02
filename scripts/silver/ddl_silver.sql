@@ -73,3 +73,70 @@ CREATE TABLE silver_erp_px_cat_g1v2 (
     maintenance     VARCHAR(50),
     dwh_create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+
+
+
+
+-- crm_cust_info: Bronze → Silver
+INSERT INTO silver_crm_cust_info (cst_id, cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr, cst_create_date)
+SELECT 
+  cst_id, 
+  cst_key, 
+  cst_firstname, 
+  cst_lastname, 
+  cst_marital_status, 
+  cst_gndr,
+  CURDATE()  -- assuming no create_date in bronze
+FROM bronze_crm_cust_info;
+
+
+-- crm_prd_info: Bronze → Silver
+INSERT INTO silver_crm_prd_info (prd_id, cat_id, prd_key, prd_nm, prd_cost, prd_line, prd_start_dt, prd_end_dt)
+SELECT 
+  prd_id,
+  NULL,  -- no cat_id in bronze; you can update later using px_cat table
+  prd_key,
+  prd_nm,
+  prd_cost,
+  prd_line,
+  prd_start_dt,
+  prd_end_dt
+FROM bronze_crm_prd_info;
+
+
+-- crm_sales_details: Bronze → Silver
+INSERT INTO silver_crm_sales_details (sls_ord_num, sls_prd_key, sls_cust_id, sls_order_dt, sls_ship_dt, sls_due_dt, sls_sales, sls_quantity, sls_price)
+SELECT 
+  sls_ord_num,
+  sls_prd_key,
+  sls_cust_id,
+  sls_order_dt,
+  sls_ship_dt,
+  sls_due_dt,
+  sls_sales,
+  sls_quantity,
+  sls_price
+FROM bronze_crm_sales_details;
+
+
+-- erp_loc_a101: Bronze → Silver
+INSERT INTO silver_erp_loc_a101 (cid, cntry)
+SELECT cid, cntry
+FROM bronze_erp_loc_a101;
+
+
+-- erp_cust_az12: Bronze → Silver
+INSERT INTO silver_erp_cust_az12 (cid, bdate, gen)
+SELECT cid, bdate, gen
+FROM bronze_erp_cust_az12;
+
+
+-- erp_px_cat_g1v2: Bronze → Silver
+INSERT INTO silver_erp_px_cat_g1v2 (id, cat, subcat, maintenance)
+SELECT id, cat, subcat, maintenance
+FROM bronze_erp_px_cat_g1v2;
+
+
