@@ -1,4 +1,4 @@
-ELIMITER $$
+DELIMITER $$
 
 CREATE PROCEDURE load_silver()
 BEGIN
@@ -7,8 +7,8 @@ BEGIN
 
     -- crm_cust_info
     SET start_time = NOW();
-    TRUNCATE TABLE silver.crm_cust_info;
-    INSERT INTO silver.crm_cust_info (
+    TRUNCATE TABLE silver_crm_cust_info;
+    INSERT INTO silver_crm_cust_info (
         cst_id, cst_key, cst_firstname, cst_lastname,
         cst_marital_status, cst_gndr, cst_create_date
     )
@@ -40,8 +40,8 @@ BEGIN
 
     -- crm_prd_info
     SET start_time = NOW();
-    TRUNCATE TABLE silver.crm_prd_info;
-    INSERT INTO silver.crm_prd_info (
+    TRUNCATE TABLE silver_crm_prd_info;
+    INSERT INTO silver_crm_prd_info (
         prd_id, cat_id, prd_key, prd_nm,
         prd_cost, prd_line, prd_start_dt, prd_end_dt
     )
@@ -66,8 +66,8 @@ BEGIN
 
     -- crm_sales_details
     SET start_time = NOW();
-    TRUNCATE TABLE silver.crm_sales_details;
-    INSERT INTO silver.crm_sales_details (
+    TRUNCATE TABLE silver_crm_sales_details;
+    INSERT INTO silver_crm_sales_details (
         sls_ord_num, sls_prd_key, sls_cust_id,
         sls_order_dt, sls_ship_dt, sls_due_dt,
         sls_sales, sls_quantity, sls_price
@@ -105,8 +105,8 @@ BEGIN
 
     -- erp_cust_az12
     SET start_time = NOW();
-    TRUNCATE TABLE silver.erp_cust_az12;
-    INSERT INTO silver.erp_cust_az12 (
+    TRUNCATE TABLE silver_erp_cust_az12;
+    INSERT INTO silver_erp_cust_az12 (
         cid, bdate, gen
     )
     SELECT
@@ -123,8 +123,8 @@ BEGIN
 
     -- erp_loc_a101
     SET start_time = NOW();
-    TRUNCATE TABLE silver.erp_loc_a101;
-    INSERT INTO silver.erp_loc_a101 (
+    TRUNCATE TABLE silver_erp_loc_a101;
+    INSERT INTO silver_erp_loc_a101 (
         cid, cntry
     )
     SELECT
@@ -141,8 +141,8 @@ BEGIN
 
     -- erp_px_cat_g1v2
     SET start_time = NOW();
-    TRUNCATE TABLE silver.erp_px_cat_g1v2;
-    INSERT INTO silver.erp_px_cat_g1v2 (
+    TRUNCATE TABLE silver_erp_px_cat_g1v2;
+    INSERT INTO silver_erp_px_cat_g1v2 (
         id, cat, subcat, maintenance
     )
     SELECT id, cat, subcat, maintenance
