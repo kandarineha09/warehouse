@@ -63,3 +63,5 @@ CREATE TABLE bronze_erp_px_cat_g1v2 (
     subcat       VARCHAR(50),
     maintenance  VARCHAR(50)
 );
+ALTER TABLE bronze_crm_cust_info
+ADD COLUMN cst_create_date DATETIME;
