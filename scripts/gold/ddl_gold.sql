@@ -1,9 +1,17 @@
--- =============================================================================
 -- Create Dimension: gold.dim_customers
 -- =============================================================================
 DROP VIEW IF EXISTS gold_dim_customers;
 
 CREATE VIEW gold_dim_customers AS
+
+WITH ca_dedup AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cid ORDER BY bdate DESC) AS rn
+    FROM silver_erp_cust_az12
+),
+la_dedup AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cid ORDER BY cntry ASC) AS rn
+    FROM silver_erp_loc_a101
+)
 SELECT
     ROW_NUMBER() OVER (ORDER BY ci.cst_id) AS customer_key,
     ci.cst_id                          AS customer_id,
@@ -19,8 +27,10 @@ SELECT
     ca.bdate                           AS birthdate,
     ci.cst_create_date                 AS create_date
 FROM silver_crm_cust_info ci
-LEFT JOIN silver_erp_cust_az12 ca ON ci.cst_key = ca.cid
-LEFT JOIN silver_erp_loc_a101 la ON ci.cst_key = la.cid;
+LEFT JOIN ca_dedup ca ON ci.cst_key = ca.cid AND ca.rn = 1
+LEFT JOIN la_dedup la ON ci.cst_key = la.cid AND la.rn = 1;
+
+
 
 -- =============================================================================
 -- Create Dimension: gold.dim_products
@@ -52,7 +62,7 @@ DROP VIEW IF EXISTS gold_fact_sales;
 CREATE VIEW gold_fact_sales AS
 SELECT
     sd.sls_ord_num  AS order_number,
-    pr.product_key  AS product_key,
+
     cu.customer_key AS customer_key,
     sd.sls_order_dt AS order_date,
     sd.sls_ship_dt  AS shipping_date,
